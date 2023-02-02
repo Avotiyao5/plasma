@@ -26,6 +26,7 @@ inline vector <long double > mfc(long double x2, long double y2, long double z2,
 	vector <vector<long double>> magnetic_field2 = { {    },   // двумерный масссив векторов магнитного поля
 													 {    },
 													 {    } };
+	vector < vector<long double>> onepar = { {}, {}, {}, {}, {}, {}, {}, {}, {}, {} };
 
 	vector <long double> radius_vector_length;  //одномерный массив длин радиус векторов
 	vector <long double> radius_vector_length_sol;
@@ -115,12 +116,12 @@ inline vector <long double> kfc( vector <vector <vector <vector <long double>>>>
 					}
 					else {
 						if (particles[c][d][0].size() > 0) {
-							r =  (x - particles[c][d][0].back()) * (x - particles[c][d][0].back()) + (y - particles[c][d][1].back()) * (y - particles[c][d][1].back()) + (z - particles[c][d][2].back()) * (z - particles[c][d][2].back());
+							r =  (x - particles[c][d][0][0]) * (x - particles[c][d][0][0]) + (y - particles[c][d][1][0]) * (y - particles[c][d][1][0]) + (z - particles[c][d][2][0]) * (z - particles[c][d][2][0]);
 							if (abs(r) > 0 && abs(r) <= pow(10,-6)) {
-								E = 8.988 * 1.6021766208 / r;
-								Ex = E * (x - particles[c][d][0].back()) / sqrt(r);
-								Ey = E * (y - particles[c][d][1].back()) / sqrt(r);
-								Ez = E * (z - particles[c][d][2].back()) / sqrt(r);
+								E = 8.988 * charge[c] * 1.6021766208 / r;
+								Ex = E * (x - particles[c][d][0][0]) / sqrt(r);
+								Ey = E * (y - particles[c][d][1][0]) / sqrt(r);
+								Ez = E * (z - particles[c][d][2][0]) / sqrt(r);
 								otvet[0] = otvet[0] + Ex;
 								otvet[1] = otvet[1] + Ey;
 								otvet[2] = otvet[2] + Ez;
@@ -139,6 +140,133 @@ inline vector <long double> kfc( vector <vector <vector <vector <long double>>>>
 			c++;
 		}
 	}
-
+	return otvet;
+}
+inline vector < vector <long double>> rr(int a, int b) {
+	vector < vector <long double>> otvet;
+	if (a == 3 && b == 3) {
+		int v = rand() % 2;
+		if (v == 0) {
+			otvet.resize(2);
+			otvet[0].push_back(4);
+			otvet[1].push_back(2);
+			otvet[0].push_back(sqrt(0.000000000000162 * 2 / mass[4]));
+			otvet[1].push_back(sqrt(0.000000000000484 * 2 / mass[2]));
+		}
+		else {
+			otvet.resize(2);
+			otvet[0].push_back(5);
+			otvet[1].push_back(1);
+			otvet[0].push_back(sqrt(0.000000000000131 * 2 / mass[5]));
+			otvet[1].push_back(sqrt(0.000000000000393 * 2 / mass[2]));
+		}
+	}
+	if ((a == 3 && b == 4) || (a == 4 && b == 3)) {
+		otvet.resize(2);
+		otvet[0].push_back(6);
+		otvet[1].push_back(1);
+		otvet[0].push_back(sqrt(0.000000000000561 * 2 / mass[6]));
+		otvet[1].push_back(sqrt(0.00000000000226 * 2 / mass[1]));
+	}
+	if ((a == 3 && b == 5) || (a == 3 && b == 5)) {
+		otvet.resize(2);
+		otvet[0].push_back(6);
+		otvet[1].push_back(2);
+		otvet[0].push_back(sqrt(0.000000000000577 * 2 / mass[6]));
+		otvet[1].push_back(sqrt(0.00000000000236 * 2 / mass[2]));
+	}
+	if (a == 4 && b == 4) {
+		otvet.resize(3);
+		otvet[0].push_back(6);
+		otvet[1].push_back(1);
+		otvet[2].push_back(1);
+		otvet[0].push_back(0);
+		otvet[1].push_back(sqrt(0.000000000000905 * 2 / mass[1]));
+		otvet[2].push_back(sqrt(0.000000000000905 * 2 / mass[1]));
+	}
+	if (a == 5 && b == 5) {
+		otvet.resize(3);
+		otvet[0].push_back(6);
+		otvet[1].push_back(2);
+		otvet[2].push_back(2);
+		otvet[0].push_back(0);
+		otvet[1].push_back(sqrt(0.000000000001029 * 2 / mass[2]));
+		otvet[2].push_back(sqrt(0.000000000001029 * 2 / mass[2]));
+	}
+	if ((a == 4 && b == 5) || (a == 4 && b == 5)) {
+		int v = rand() % 100;
+		if (v > 48) {
+			otvet.resize(3);
+			otvet[0].push_back(6);
+			otvet[1].push_back(2);
+			otvet[2].push_back(1);
+			otvet[0].push_back(0);
+			otvet[1].push_back(sqrt(0.000000000000969 * 2 / mass[2]));
+			otvet[2].push_back(sqrt(0.000000000000969 * 2 / mass[1]));
+		}
+		else if (v < 6) {
+			otvet.resize(3);
+			otvet[0].push_back(6);
+			otvet[1].push_back(2);
+			otvet[2].push_back(1);
+			otvet[0].push_back(sqrt(0.00000000000008 * 2 / mass[6]));
+			otvet[1].push_back(sqrt(0.0000000000019 * 2 / mass[2]));
+			otvet[2].push_back(sqrt(0.000000000000304 * 2 / mass[1]));
+		}
+		else {
+			otvet.resize(2);
+			otvet[0].push_back(6);
+			otvet[1].push_back(3);
+			otvet[0].push_back(sqrt(0.000000000000769 * 2 / mass[6]));
+			otvet[1].push_back(sqrt(0.000000000001522 * 2 / mass[3]));
+		}
+		return otvet;
+	}
+}
+inline vector < vector <long double>> nf(vector <vector <vector <vector <long double>>>> particles) {
+	vector < vector <long double>> otvet;
+	int c = 0; 
+	long double r = 0;
+	int co = particles.size();
+	vector < vector <long double>> re;
+	long double E1, E2, E;
+	long double cos = 0, ch = 0, zn = 0, cos2 = 0, ch2 = 0, zn2 = 0;												// служебные переменные
+	while (co > c) {
+		int d = 0;
+		while (particles[c].size() > d) {
+			int a = c;
+			while (co > a) {
+				re = rr(c, a);
+				if (re.size() != 0) {
+					int b = 0;
+					while (particles[c].size() > b) {
+						if ((c != a) && (d != b)) {
+							r = (particles[a][b][0][0] - particles[c][d][0][0]) * (particles[a][b][0][0] - particles[c][d][0][0]) + (particles[a][b][1][0] - particles[c][d][1][0]) * (particles[a][b][1][0] - particles[c][d][1][0]) + (particles[a][b][2][0] - particles[c][d][2][0]) * (particles[a][b][2][0] - particles[c][d][2][0]);
+							if (sqrt(r) <= 0.000000000001) {
+								if (sqrt(r) <= 0.000000000000001) {
+									//particles[re[0][0]].push_back({});
+								}
+								else {
+									ch = (particles[c][d][0][0] - particles[a][b][0][0]) * (particles[a][b][3][0] - particles[a][b][0][0]) + (particles[c][d][1][0] - particles[a][b][1][0]) * (particles[a][b][4][0] - particles[a][b][1][0]) + (particles[c][d][2][0] - particles[a][b][2][0]) * (particles[a][b][5][0] - particles[a][b][2][0]);
+									zn = sqrt(r) * sqrt((particles[a][b][3][0] - particles[a][b][0][0]) * (particles[a][b][3][0] - particles[a][b][0][0]) + (particles[a][b][4][0] - particles[a][b][1][0]) * (particles[a][b][4][0] - particles[a][b][1][0]) + (particles[a][b][5][0] - particles[a][b][2][0]) * (particles[a][b][5][0] - particles[a][b][2][0]));
+									cos = ch / zn;
+									ch2 = (particles[a][b][0][0] - particles[c][d][0][0]) * (particles[c][d][3][0] - particles[c][d][0][0]) + (particles[a][b][1][0] - particles[c][d][1][0]) * (particles[c][d][4][0] - particles[c][d][1][0]) + (particles[a][b][2][0] - particles[c][d][2][0]) * (particles[c][d][5][0] - particles[c][d][2][0]);
+									zn2 = sqrt(r) * sqrt((particles[c][d][3][0] - particles[c][d][0][0]) * (particles[c][d][3][0] - particles[c][d][0][0]) + (particles[c][d][4][0] - particles[c][d][1][0]) * (particles[c][d][4][0] - particles[c][d][1][0]) + (particles[c][d][5][0] - particles[c][d][2][0]) * (particles[c][d][5][0] - particles[c][d][2][0]));
+									cos2 = ch2 / zn2;
+									E1 = mass[c] * (particles[c][d][3][0] * particles[c][d][3][0] + particles[c][d][4][0] * particles[c][d][4][0] + particles[c][d][5][0] * particles[c][d][5][0]) * cos * cos / 2;
+									E2 = mass[a] * (particles[a][b][3][0] * particles[a][b][3][0] + particles[a][b][4][0] * particles[a][b][4][0] + particles[a][b][5][0] * particles[a][b][5][0]) * cos2 * cos2 / 2;
+									E = E1 + E2;
+								}
+							}
+						}
+						b++;
+					}
+				}
+				a++;
+			}
+			d++;
+		}
+		c++;
+	}
 	return otvet;
 }
