@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cmath>
-#include <vector>
 #include <fstream>
+#include <vector>
 #include "Header.h"
 
 using namespace std;
@@ -26,79 +26,79 @@ inline vector <long double > mfc(long double x2, long double y2, long double z2,
 	vector <vector<long double>> magnetic_field2 = { {    },   // двумерный масссив векторов магнитного поля
 													 {    },
 													 {    } };
-	vector < vector<long double>> onepar = { {}, {}, {}, {}, {}, {}, {}, {}, {}, {} };
 
 	vector <long double> radius_vector_length;  //одномерный массив длин радиус векторов
 	vector <long double> radius_vector_length_sol;
 	vector <long double> otvet;
-	int b=0;
+	int b = 0;
 	// x2, y2, z2координаты точки, в которой надо посчитать магнитное поле, то есть по сути координата частицы
-	long double B=0; //значение магнитного поля в заданной точке
-	long double I= 48144000, I2max = 151200000, I2; //значение силы тока в обмотке     48144000
-	long double j, rr, f, a1=0, b1=0, c1=0; //служебные переменные
-		for (int c = 0; c < wir[0].size(); c++) {						// этот цикл записывает вычеты координат радиус векторов
-			radius_vector[0].push_back(x2 - wir[0][c]);
-			radius_vector[1].push_back(y2 - wir[1][c]);
-			radius_vector[2].push_back(z2 - wir[2][c]);
-			
-		}
-		for (int c = 0; c < wir_sol[0].size(); c++) {						// этот цикл записывает вычеты координат радиус векторов
-			radius_vector_sol[0].push_back(x2 - wir_sol[0][c]);
-			radius_vector_sol[1].push_back(y2 - wir_sol[1][c]);
-			radius_vector_sol[2].push_back(z2 - wir_sol[2][c]);
-		}
-		for (int c = 0; c < wire_vector[0].size(); c++) {               // этот цикл записывает вычеты координат векторного произведения маленьких векторочков обмотки на радиус вектора
-			magnetic_field[0].push_back(wire_vector[1][c] * radius_vector[2][c] - wire_vector[2][c] * radius_vector[1][c]); // формула для векторного произведения черерз координаты
-			magnetic_field[1].push_back(wire_vector[2][c] * radius_vector[0][c] - wire_vector[0][c] * radius_vector[2][c]);
-			magnetic_field[2].push_back(wire_vector[0][c] * radius_vector[1][c] - wire_vector[1][c] * radius_vector[0][c]);
-		}
-		for (int c = 0; c < wire_vector_sol[0].size(); c++) {               // этот цикл записывает вычеты координат векторного произведения маленьких векторочков обмотки на радиус вектора
-			magnetic_field_sol[0].push_back(wire_vector_sol[1][c] * radius_vector_sol[2][c] - wire_vector_sol[2][c] * radius_vector_sol[1][c]); // формула для векторного произведения черерз координаты
-			magnetic_field_sol[1].push_back(wire_vector_sol[2][c] * radius_vector_sol[0][c] - wire_vector[0][c] * radius_vector_sol[2][c]);
-			magnetic_field_sol[2].push_back(wire_vector[0][c] * radius_vector_sol[1][c] - wire_vector_sol[1][c] * radius_vector_sol[0][c]);
-		}
-		for (int c = 0; c < radius_vector[0].size(); c++) {              // этот цикл записывает длины радиус векторов
-			radius_vector_length.push_back(sqrt(radius_vector[0][c] * radius_vector[0][c] + radius_vector[1][c] * radius_vector[1][c] + radius_vector[2][c] * radius_vector[2][c]));
-		}
-		for (int c = 0; c < radius_vector_sol[0].size(); c++) {              // этот цикл записывает длины радиус векторов
-			radius_vector_length_sol.push_back(sqrt(radius_vector_sol[0][c] * radius_vector_sol[0][c] + radius_vector_sol[1][c] * radius_vector_sol[1][c] + radius_vector_sol[2][c] * radius_vector_sol[2][c]));
-		}
-		for (int c = 0; c < magnetic_field[0].size(); c++) {			// этот цикл записывает магнитные поля от каждого маленького кусочка обмотки
-			b = 0;
-			j = sqrt(magnetic_field[0][c] * magnetic_field[0][c] + magnetic_field[1][c] * magnetic_field[1][c] + magnetic_field[2][c] * magnetic_field[2][c]);
-			rr = pow(radius_vector_length[c], 3);
-			while (b <= 2) {
-				f = magnetic_field[b][c] * I * mm0 / 4 / PI / rr;
-				magnetic_field2[b].push_back(f);
-				b++;
-			}
-		}
-		//I2 = I2max * sin((t * pow(10, 8) + 1) * PI / 180) / 2;
-		for (int c = 0; c < magnetic_field_sol[0].size(); c++) {			// этот цикл записывает магнитные поля от каждого маленького кусочка обмотки
-			b = 0;
-			j = sqrt(magnetic_field_sol[0][c] * magnetic_field_sol[0][c] + magnetic_field_sol[1][c] * magnetic_field_sol[1][c] + magnetic_field_sol[2][c] * magnetic_field_sol[2][c]);
-			rr = pow(radius_vector_length_sol[c], 3);
-			while (b <= 2) {
-				f = magnetic_field_sol[b][c] * I2max * mm0 / 4 / PI / rr;
-				magnetic_field2[b].push_back(f);
-				b++;
-			}
-		}
-		for (int c = 0; c < magnetic_field2[0].size(); c++) {        // этот цикл векторно суммирует все маленькие поля в результирующее поле 
-			a1 = a1 + magnetic_field2[0][c];
-			b1 = b1 + magnetic_field2[1][c];
-			c1 = c1 + magnetic_field2[2][c];
-		}
-		B = sqrt(a1 * a1 + b1 * b1 + c1 * c1);               // ищем длину вектора магнитного поля
-		otvet.push_back(a1);
-		otvet.push_back(b1);
-		otvet.push_back(c1);
+	long double B = 0; //значение магнитного поля в заданной точке
+	long double I = 48144000, I2max = 151200000, I2; //значение силы тока в обмотке     48144000
+	long double j, rr, f, a1 = 0, b1 = 0, c1 = 0; //служебные переменные
+	for (int c = 0; c < wir[0].size(); c++) {						// этот цикл записывает вычеты координат радиус векторов
+		radius_vector[0].push_back(x2 - wir[0][c]);
+		radius_vector[1].push_back(y2 - wir[1][c]);
+		radius_vector[2].push_back(z2 - wir[2][c]);
 
-		return otvet;
+	}
+	for (int c = 0; c < wir_sol[0].size(); c++) {						// этот цикл записывает вычеты координат радиус векторов
+		radius_vector_sol[0].push_back(x2 - wir_sol[0][c]);
+		radius_vector_sol[1].push_back(y2 - wir_sol[1][c]);
+		radius_vector_sol[2].push_back(z2 - wir_sol[2][c]);
+	}
+	for (int c = 0; c < wire_vector[0].size(); c++) {               // этот цикл записывает вычеты координат векторного произведения маленьких векторочков обмотки на радиус вектора
+		magnetic_field[0].push_back(wire_vector[1][c] * radius_vector[2][c] - wire_vector[2][c] * radius_vector[1][c]); // формула для векторного произведения черерз координаты
+		magnetic_field[1].push_back(wire_vector[2][c] * radius_vector[0][c] - wire_vector[0][c] * radius_vector[2][c]);
+		magnetic_field[2].push_back(wire_vector[0][c] * radius_vector[1][c] - wire_vector[1][c] * radius_vector[0][c]);
+	}
+	for (int c = 0; c < wire_vector_sol[0].size(); c++) {               // этот цикл записывает вычеты координат векторного произведения маленьких векторочков обмотки на радиус вектора
+		magnetic_field_sol[0].push_back(wire_vector_sol[1][c] * radius_vector_sol[2][c] - wire_vector_sol[2][c] * radius_vector_sol[1][c]); // формула для векторного произведения черерз координаты
+		magnetic_field_sol[1].push_back(wire_vector_sol[2][c] * radius_vector_sol[0][c] - wire_vector[0][c] * radius_vector_sol[2][c]);
+		magnetic_field_sol[2].push_back(wire_vector[0][c] * radius_vector_sol[1][c] - wire_vector_sol[1][c] * radius_vector_sol[0][c]);
+	}
+	for (int c = 0; c < radius_vector[0].size(); c++) {              // этот цикл записывает длины радиус векторов
+		radius_vector_length.push_back(sqrt(radius_vector[0][c] * radius_vector[0][c] + radius_vector[1][c] * radius_vector[1][c] + radius_vector[2][c] * radius_vector[2][c]));
+	}
+	for (int c = 0; c < radius_vector_sol[0].size(); c++) {              // этот цикл записывает длины радиус векторов
+		radius_vector_length_sol.push_back(sqrt(radius_vector_sol[0][c] * radius_vector_sol[0][c] + radius_vector_sol[1][c] * radius_vector_sol[1][c] + radius_vector_sol[2][c] * radius_vector_sol[2][c]));
+	}
+	for (int c = 0; c < magnetic_field[0].size(); c++) {			// этот цикл записывает магнитные поля от каждого маленького кусочка обмотки
+		b = 0;
+		j = sqrt(magnetic_field[0][c] * magnetic_field[0][c] + magnetic_field[1][c] * magnetic_field[1][c] + magnetic_field[2][c] * magnetic_field[2][c]);
+		rr = pow(radius_vector_length[c], 3);
+		while (b <= 2) {
+			f = magnetic_field[b][c] * I * mm0 /(4 * PI * rr);
+			magnetic_field2[b].push_back(f);
+			b++;
+		}
+	}
+	//I2 = I2max * sin((t * pow(10, 8) + 1) * PI / 180) / 2;
+	for (int c = 0; c < magnetic_field_sol[0].size(); c++) {			// этот цикл записывает магнитные поля от каждого маленького кусочка обмотки
+		b = 0;
+		j = sqrt(magnetic_field_sol[0][c] * magnetic_field_sol[0][c] + magnetic_field_sol[1][c] * magnetic_field_sol[1][c] + magnetic_field_sol[2][c] * magnetic_field_sol[2][c]);
+		rr = pow(radius_vector_length_sol[c], 3);
+		while (b <= 2) {
+			f = magnetic_field_sol[b][c] * I2max * mm0 /( 4 * PI * rr);
+			magnetic_field2[b].push_back(f);
+			b++;
+		}
+	}
+	for (int c = 0; c < magnetic_field2[0].size(); c++) {        // этот цикл векторно суммирует все маленькие поля в результирующее поле 
+		a1 = a1 + magnetic_field2[0][c];
+		b1 = b1 + magnetic_field2[1][c];
+		c1 = c1 + magnetic_field2[2][c];
+	}
+	B = sqrt(a1 * a1 + b1 * b1 + c1 * c1);               // ищем длину вектора магнитного поля
+	otvet.push_back(a1);
+	otvet.push_back(b1);
+	otvet.push_back(c1);
+
+	return otvet;
 }
 
 
-inline vector <long double> kfc( vector <vector <vector <vector <long double>>>> particles, long double x, long double y, long double z,int b, int a) {
+
+inline vector <long double> kfc(vector <vector <vector <vector <long double>>>> particles, long double x, long double y, long double z, int b, int a) {
 	vector <long double> otvet;
 	int c = 0;
 	long double E, Ex, Ey, Ez;
@@ -116,8 +116,8 @@ inline vector <long double> kfc( vector <vector <vector <vector <long double>>>>
 					}
 					else {
 						if (particles[c][d][0].size() > 0) {
-							r =  (x - particles[c][d][0][0]) * (x - particles[c][d][0][0]) + (y - particles[c][d][1][0]) * (y - particles[c][d][1][0]) + (z - particles[c][d][2][0]) * (z - particles[c][d][2][0]);
-							if (abs(r) > 0 && abs(r) <= pow(10,-6)) {
+							r = (x - particles[c][d][0][0]) * (x - particles[c][d][0][0]) + (y - particles[c][d][1][0]) * (y - particles[c][d][1][0]) + (z - particles[c][d][2][0]) * (z - particles[c][d][2][0]);
+							if (abs(r) > 0 && abs(r) <= pow(10, -6)) {
 								E = 8.988 * charge[c] * 1.6021766208 / r;
 								Ex = E * (x - particles[c][d][0][0]) / sqrt(r);
 								Ey = E * (y - particles[c][d][1][0]) / sqrt(r);
@@ -142,6 +142,7 @@ inline vector <long double> kfc( vector <vector <vector <vector <long double>>>>
 	}
 	return otvet;
 }
+
 inline vector < vector <long double>> rr(int a, int b) {
 	vector < vector <long double>> otvet;
 	if (a == 3 && b == 3) {
@@ -168,7 +169,7 @@ inline vector < vector <long double>> rr(int a, int b) {
 		otvet[0].push_back(sqrt(0.000000000000561 * 2 / mass[6]));
 		otvet[1].push_back(sqrt(0.00000000000226 * 2 / mass[1]));
 	}
-	if ((a == 3 && b == 5) || (a == 3 && b == 5)) {
+	if ( (a == 3 && b == 5) || (a == 3 && b == 5) ) {
 		otvet.resize(2);
 		otvet[0].push_back(6);
 		otvet[1].push_back(2);
@@ -193,7 +194,7 @@ inline vector < vector <long double>> rr(int a, int b) {
 		otvet[1].push_back(sqrt(0.000000000001029 * 2 / mass[2]));
 		otvet[2].push_back(sqrt(0.000000000001029 * 2 / mass[2]));
 	}
-	if ((a == 4 && b == 5) || (a == 4 && b == 5)) {
+	if ( (a == 4 && b == 5) || (a == 4 && b == 5) ) {
 		int v = rand() % 100;
 		if (v > 48) {
 			otvet.resize(3);
@@ -223,9 +224,11 @@ inline vector < vector <long double>> rr(int a, int b) {
 		return otvet;
 	}
 }
+
 inline vector < vector <long double>> nf(vector <vector <vector <vector <long double>>>> particles) {
+	vector < vector<long double>> oneparticle = { {}, {}, {}, {}, {}, {}, {}, {}, {}, {} };
 	vector < vector <long double>> otvet;
-	int c = 0; 
+	int c = 0;
 	long double r = 0;
 	int co = particles.size();
 	vector < vector <long double>> re;
@@ -244,7 +247,13 @@ inline vector < vector <long double>> nf(vector <vector <vector <vector <long do
 							r = (particles[a][b][0][0] - particles[c][d][0][0]) * (particles[a][b][0][0] - particles[c][d][0][0]) + (particles[a][b][1][0] - particles[c][d][1][0]) * (particles[a][b][1][0] - particles[c][d][1][0]) + (particles[a][b][2][0] - particles[c][d][2][0]) * (particles[a][b][2][0] - particles[c][d][2][0]);
 							if (sqrt(r) <= 0.000000000001) {
 								if (sqrt(r) <= 0.000000000000001) {
-									//particles[re[0][0]].push_back({});
+									particles[a][b].clear();
+									particles[c][d].clear();
+									int dop = 0;
+									while (dop > re.size()) {
+										particles[re[dop][0]].push_back(oneparticle);
+										dop++;
+									}
 								}
 								else {
 									ch = (particles[c][d][0][0] - particles[a][b][0][0]) * (particles[a][b][3][0] - particles[a][b][0][0]) + (particles[c][d][1][0] - particles[a][b][1][0]) * (particles[a][b][4][0] - particles[a][b][1][0]) + (particles[c][d][2][0] - particles[a][b][2][0]) * (particles[a][b][5][0] - particles[a][b][2][0]);

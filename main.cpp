@@ -1,19 +1,19 @@
 #include <iostream>
 #include <cmath>
-#include <vector>
 #include <fstream>
-#include "Header.h"
 #include "functions.cpp"
+#include <vector>
 
 using namespace std;
 
+
 vector <vector <vector <vector<long double>>>> particles = { { {  {}, {}, {}, {}, {}, {}, {}, {}, {}, {}  } },
-															{ {  {}, {}, {}, {}, {}, {}, {}, {}, {}, {}  } },
-															{ {  {}, {}, {}, {}, {}, {}, {}, {}, {}, {}  } },
-															{ {  {}, {}, {}, {}, {}, {}, {}, {}, {}, {}  } },
-															{ {  {}, {}, {}, {}, {}, {}, {}, {}, {}, {}  } },
-															{ {  {}, {}, {}, {}, {}, {}, {}, {}, {}, {}  } },
-															{ {  {}, {}, {}, {}, {}, {}, {}, {}, {}, {}  } } }; //электроны-0 протоны-1 нейтроны-2 дейтроны-3 тритии-4 гелии3-5 гелии4-6
+															 { {  {}, {}, {}, {}, {}, {}, {}, {}, {}, {}  } },
+															 { {  {}, {}, {}, {}, {}, {}, {}, {}, {}, {}  } },
+															 { {  {}, {}, {}, {}, {}, {}, {}, {}, {}, {}  } },
+															 { {  {}, {}, {}, {}, {}, {}, {}, {}, {}, {}  } },
+															 { {  {}, {}, {}, {}, {}, {}, {}, {}, {}, {}  } },
+															 { {  {}, {}, {}, {}, {}, {}, {}, {}, {}, {}  } } }; //электроны-0 протоны-1 нейтроны-2 дейтроны-3 тритии-4 гелии3-5 гелии4-6
 // это четырёхмерный массив, штука достаточно сложная для понимания
 // 0   1   2   3   4   5   6   7   8   9
 // строки соответстуют изменению во вермени
@@ -30,19 +30,21 @@ vector <vector<long double>> wire = { {    },     // двумерный массив координат 
 							  {    },
 							  {    } };
 vector <vector<long double>> wire_vector = { {    },    // двумерный маасив векторочко обмотки с вычетом координат( конечные минус начальные)
-												 {    },
-												 {    } };
+											 {    },
+											 {    } };
 vector <vector<long double>> wire_sol = { {    },     // двумерный массив координат векторочков обмотке(начальные координаты, конечные)
 							  {    },
 							  {    },
 							  {    },
 							  {    },
 							  {    } };
-vector <vector<long double>> wire_vector_sol = { {    },    // двумерный маасив векторочко обмотки с вычетом координат( конечные минус начальные)
+vector <vector<long double>> wire_vector_sol = { {    },    // двумерный маcсив векторочко обмотки с вычетом координат( конечные минус начальные)
 												 {    },
 												 {    } };
 vector <long double> otvet;
 vector <long double> otvet2;
+
+
 int main() {
 	ofstream fout;
 	fout.open("tor.txt");
@@ -52,7 +54,7 @@ int main() {
 	int sol = 0;
 	int u = 0;
 	long double RR;
-	while (u < 12) {
+	while (u < 12) {						// описание кнфигураций полоидальных катушек
 		double corner3 = 0;
 		while (corner3 <= 360) {
 			long double x0 = 0;
@@ -143,7 +145,7 @@ int main() {
 				z = RR * z0;
 				y = 6.5 / 6.6 * r;
 			}
-			fout << x << " " << y << " " << z << endl;
+			//fout << x << " " << y << " " << z << endl;
 			if (sol == 0) {
 				if (corner3 == 0) {
 					wire_sol[0].push_back(x);
@@ -190,7 +192,7 @@ int main() {
 	}
 	
 	double corner = 0; // угол  от 0 до 360(угол большого кольца)
-	while (corner <= 360) {  // цикл котрый перебирает угол с шаго по 1
+	while (corner <= 360) {  // цикл котрый перебирает угол с шаго по 1                    описание конфигураций тороидальных катушек
 		long double x0 = 0;   //служебые переменные тоже самое что x и y
 		long double z0 = 0;
 		x0 = cos(corner * PI / 180) * R; //высчитываю координаты большой окружности 
@@ -205,7 +207,7 @@ int main() {
 			z1 = sin(corner * PI / 180) * j; // на котром мы сейчас строим маленькую окружность
 			x = x1 + x0; //складываем служебные переменные получаем координаты получаем координаты из центра тора
 			z = z1 + z0;
-			fout << x << " " << y << " " << z << endl; //всё выводим
+			//fout << x << " " << y << " " << z << endl; //всё выводим
 			if (corner2 == 0) {                     // с 69 строчки по 119 махинации по записи координат векторочков обмотки(так много надо, чтобы ничё не сломалось, 
 				a = 0;								//и чтобы конкретно нчала векторов и концы записывались в нужные места)
 				while (a < 3) {
@@ -315,25 +317,34 @@ int main() {
 	*/
 	long double t = 0;
 	int counter_of_particles = 0, counter_of_particles2 = 0;
-	long double v0xz = 1000000;
-	long double dt = 1 * pow(10, -13);											// 1 * pow(10, -22)
-	long double dt2 = 10 * pow(10, -11);
-	long double con2 = 1.6021766208 * pow(10, 2);
+	long double v0xz = 100000;
+	long double dt = pow(10, -13);											
+	long double dt2 = pow(10, -12);
+	long double con2 = 1.6021766208 * pow(10, -19);
 	long double con = 0;
 	int tcount = 0, i = 0;
-	int qua = 2;
+	int qua = 1;
 	int por = 0;
-	particles[3].resize(qua, pusb);
-	particles[4].resize(qua, pusb);
-	particles[0].resize(2*qua, pusb);
-	while (t <  10* pow(10, -10)) {
+	int por2 = 0;
+	particles[0].clear();
+	particles[1].clear();
+	particles[2].clear();
+	particles[3].clear();
+	particles[4].clear();
+	particles[5].clear();
+	particles[6].clear();
+
+	particles[0].clear();
+	while (t <  pow(10, -11)) {						// начало цикла течения времени
 		i++;
-		if (i == dt2/dt) {
-			if (por == 0) {
-				if (counter_of_particles < qua) {
+		if (i == 100) {
+			if (por == 0) {						//условие на чередование дейтерия и трития
+				if (counter_of_particles < qua) {					//ограничение количества частиц
 					i = 0;
+					/*
 					con = con2 * charge[3] / mass[3];
-					particles[3][counter_of_particles][0].push_back(0);
+					particles[3].push_back(pusb);
+					particles[3][counter_of_particles][0].push_back(0);					//добавляем дейтерий
 					particles[3][counter_of_particles][0].push_back(0);
 					particles[3][counter_of_particles][1].push_back(0);
 					particles[3][counter_of_particles][1].push_back(0);
@@ -341,22 +352,26 @@ int main() {
 					particles[3][counter_of_particles][2].push_back(0);
 					particles[3][counter_of_particles][3].push_back(-v0xz * 0.3);
 					particles[3][counter_of_particles][3].push_back(0);
-					particles[3][counter_of_particles][4].push_back(0);
+					particles[3][counter_of_particles][4].push_back(-v0xz*0.7);
 					particles[3][counter_of_particles][4].push_back(0);
 					particles[3][counter_of_particles][5].push_back(-v0xz * 0.9);
 					particles[3][counter_of_particles][5].push_back(0.10101010101);
-					otvet = mfc(particles[3][counter_of_particles][0].back(), particles[3][counter_of_particles][1].back(), particles[3][counter_of_particles][2].back(), wire, wire_vector, wire_sol, wire_vector_sol, t);
+					otvet = mfc(particles[3][counter_of_particles][0][0], particles[3][counter_of_particles][1][0], particles[3][counter_of_particles][2][0], wire, wire_vector, wire_sol, wire_vector_sol, t);
 					//otvet2 = kfc(particles, particles[3][counter_of_particles][0].back(), particles[3][counter_of_particles][1].back(), particles[3][counter_of_particles][2].back(), 3, counter_of_particles);
-					particles[3][counter_of_particles][6].push_back(((particles[3][counter_of_particles][4][0] * otvet[2] - particles[3][counter_of_particles][5][0] * otvet[1]) * 1000000 /* + otvet2[0]*/) * con);
+					particles[3][counter_of_particles][6].push_back((particles[3][counter_of_particles][4][0] * otvet[2] - particles[3][counter_of_particles][5][0] * otvet[1]) * con);
 					particles[3][counter_of_particles][6].push_back(0);
-					particles[3][counter_of_particles][7].push_back(((particles[3][counter_of_particles][5][0] * otvet[0] - particles[3][counter_of_particles][3][0] * otvet[2]) * 1000000 /* + otvet2[1]*/) * con);
+					particles[3][counter_of_particles][7].push_back((particles[3][counter_of_particles][5][0] * otvet[0] - particles[3][counter_of_particles][3][0] * otvet[2]) * con);
 					particles[3][counter_of_particles][7].push_back(0);
-					particles[3][counter_of_particles][8].push_back(((particles[3][counter_of_particles][3][0] * otvet[1] - particles[3][counter_of_particles][4][0] * otvet[0]) * 1000000 /* + otvet2[2]*/) * con);
+					particles[3][counter_of_particles][8].push_back((particles[3][counter_of_particles][3][0] * otvet[1] - particles[3][counter_of_particles][4][0] * otvet[0]) * con);
 					particles[3][counter_of_particles][8].push_back(0);
 					particles[3][counter_of_particles][9].push_back(t);
 					particles[3][counter_of_particles][9].push_back(0);
+					fout << particles[3][counter_of_particles][0][0] << " " << particles[3][counter_of_particles][1][0] << " " << particles[3][counter_of_particles][2][0] << endl;
+					*/
+					
 					con = con2 * charge[0] / mass[0];
-					particles[0][counter_of_particles + counter_of_particles2][0].push_back(0.000001);
+					particles[0].push_back(pusb);
+					particles[0][counter_of_particles + counter_of_particles2][0].push_back(0.000001);			//добавляем электрон
 					particles[0][counter_of_particles + counter_of_particles2][0].push_back(0);
 					particles[0][counter_of_particles + counter_of_particles2][1].push_back(0);
 					particles[0][counter_of_particles + counter_of_particles2][1].push_back(0);
@@ -368,25 +383,36 @@ int main() {
 					particles[0][counter_of_particles + counter_of_particles2][4].push_back(0);
 					particles[0][counter_of_particles + counter_of_particles2][5].push_back(-v0xz * 0.9);
 					particles[0][counter_of_particles + counter_of_particles2][5].push_back(0.10101010101);
-					otvet = mfc(particles[3][counter_of_particles + counter_of_particles2][0].back(), particles[3][counter_of_particles + counter_of_particles2][1].back(), particles[3][counter_of_particles + counter_of_particles2][2].back(), wire, wire_vector, wire_sol, wire_vector_sol, t);
+					otvet = mfc(particles[0][counter_of_particles + counter_of_particles2][0].back(), particles[0][counter_of_particles + counter_of_particles2][1].back(), particles[0][counter_of_particles + counter_of_particles2][2].back(), wire, wire_vector, wire_sol, wire_vector_sol, t);
 					//otvet2 = kfc(particles, particles[3][counter_of_particles][0].back(), particles[3][counter_of_particles][1].back(), particles[3][counter_of_particles][2].back(), 3, counter_of_particles);
-					particles[0][counter_of_particles + counter_of_particles2][6].push_back(((particles[0][counter_of_particles + counter_of_particles2][4][0] * otvet[2] - particles[0][counter_of_particles + counter_of_particles2][5][0] * otvet[1]) * 1000000 /* + otvet2[0]*/) * con);
+					particles[0][counter_of_particles + counter_of_particles2][6].push_back((particles[0][counter_of_particles + counter_of_particles2][4][0] * otvet[2] - particles[0][counter_of_particles + counter_of_particles2][5][0] * otvet[1]) * con);
 					particles[0][counter_of_particles + counter_of_particles2][6].push_back(0);
-					particles[0][counter_of_particles + counter_of_particles2][7].push_back(((particles[0][counter_of_particles + counter_of_particles2][5][0] * otvet[0] - particles[0][counter_of_particles + counter_of_particles2][3][0] * otvet[2]) * 1000000 /* + otvet2[1]*/) * con);
+					particles[0][counter_of_particles + counter_of_particles2][7].push_back((particles[0][counter_of_particles + counter_of_particles2][5][0] * otvet[0] - particles[0][counter_of_particles + counter_of_particles2][3][0] * otvet[2]) * con);
 					particles[0][counter_of_particles + counter_of_particles2][7].push_back(0);
-					particles[0][counter_of_particles + counter_of_particles2][8].push_back(((particles[0][counter_of_particles + counter_of_particles2][3][0] * otvet[1] - particles[0][counter_of_particles + counter_of_particles2][4][0] * otvet[0]) * 1000000 /* + otvet2[2]*/) * con);
+					particles[0][counter_of_particles + counter_of_particles2][8].push_back((particles[0][counter_of_particles + counter_of_particles2][3][0] * otvet[1] - particles[0][counter_of_particles + counter_of_particles2][4][0] * otvet[0]) * con);
 					particles[0][counter_of_particles + counter_of_particles2][8].push_back(0);
 					particles[0][counter_of_particles + counter_of_particles2][9].push_back(t);
 					particles[0][counter_of_particles + counter_of_particles2][9].push_back(0);
+					//fout << particles[0][counter_of_particles + counter_of_particles2][0][0] << " " << particles[0][counter_of_particles + counter_of_particles2][1][0] << " " << particles[0][counter_of_particles + counter_of_particles2][2][0] << endl;
 					counter_of_particles++;
+					particles[1].clear();
+					particles[2].clear();
+					particles[5].clear();
+					particles[6].clear();
+					if (por2 == 0) {
+						particles[4].clear();
+					}
 				}
 				por = 1;
+				por2 = 1;
 			}
+			/*
 			else if (por == 1) {
 				if (counter_of_particles2 < qua) {
 					i = 0;
 					con = con2 * charge[4] / mass[4];
-					particles[4][counter_of_particles2][0].push_back(0);
+					particles[4].push_back(pusb);
+					particles[4][counter_of_particles2][0].push_back(0);		//добавляем тритий
 					particles[4][counter_of_particles2][0].push_back(0);
 					particles[4][counter_of_particles2][1].push_back(0);
 					particles[4][counter_of_particles2][1].push_back(0);
@@ -398,18 +424,21 @@ int main() {
 					particles[4][counter_of_particles2][4].push_back(0);
 					particles[4][counter_of_particles2][5].push_back(-v0xz * 0.9);
 					particles[4][counter_of_particles2][5].push_back(0.10101010101);
-					otvet = mfc(particles[3][counter_of_particles][0].back(), particles[3][counter_of_particles][1].back(), particles[3][counter_of_particles][2].back(), wire, wire_vector, wire_sol, wire_vector_sol, t);
+					otvet = mfc(particles[4][counter_of_particles2][0].back(), particles[4][counter_of_particles2][1].back(), particles[4][counter_of_particles2][2].back(), wire, wire_vector, wire_sol, wire_vector_sol, t);
 					//otvet2 = kfc(particles, particles[3][counter_of_particles][0].back(), particles[3][counter_of_particles][1].back(), particles[3][counter_of_particles][2].back(), 3, counter_of_particles);
-					particles[4][counter_of_particles2][6].push_back(((particles[4][counter_of_particles2][4][0] * otvet[2] - particles[4][counter_of_particles2][5][0] * otvet[1]) * 1000000 /* + otvet2[0]*/) * con);
+					particles[4][counter_of_particles2][6].push_back((particles[4][counter_of_particles2][4][0] * otvet[2] - particles[4][counter_of_particles2][5][0] * otvet[1]) * con);
 					particles[4][counter_of_particles2][6].push_back(0);
-					particles[4][counter_of_particles2][7].push_back(((particles[4][counter_of_particles2][5][0] * otvet[0] - particles[4][counter_of_particles2][3][0] * otvet[2]) * 1000000 /* + otvet2[1]*/) * con);
+					particles[4][counter_of_particles2][7].push_back((particles[4][counter_of_particles2][5][0] * otvet[0] - particles[4][counter_of_particles2][3][0] * otvet[2]) * con);
 					particles[4][counter_of_particles2][7].push_back(0);
-					particles[4][counter_of_particles2][8].push_back(((particles[4][counter_of_particles2][3][0] * otvet[1] - particles[4][counter_of_particles2][4][0] * otvet[0]) * 1000000 /* + otvet2[2]*/) * con);
+					particles[4][counter_of_particles2][8].push_back((particles[4][counter_of_particles2][3][0] * otvet[1] - particles[4][counter_of_particles2][4][0] * otvet[0]) * con);
 					particles[4][counter_of_particles2][8].push_back(0);
 					particles[4][counter_of_particles2][9].push_back(t);
 					particles[4][counter_of_particles2][9].push_back(0);
+					cout << "2" << endl;
+					fout << particles[4][counter_of_particles2][0][0] << " " << particles[4][counter_of_particles2][1][0] << " " << particles[4][counter_of_particles2][2][0] << endl;
 					con = con2 * charge[0] / mass[0];
-					particles[0][counter_of_particles + counter_of_particles2][0].push_back(0.000001);
+					particles[0].push_back(pusb);
+					particles[0][counter_of_particles + counter_of_particles2][0].push_back(0.000001);		//добавляем электрон
 					particles[0][counter_of_particles + counter_of_particles2][0].push_back(0);
 					particles[0][counter_of_particles + counter_of_particles2][1].push_back(0);
 					particles[0][counter_of_particles + counter_of_particles2][1].push_back(0);
@@ -421,28 +450,35 @@ int main() {
 					particles[0][counter_of_particles + counter_of_particles2][4].push_back(0);
 					particles[0][counter_of_particles + counter_of_particles2][5].push_back(-v0xz * 0.9);
 					particles[0][counter_of_particles + counter_of_particles2][5].push_back(0.10101010101);
-					otvet = mfc(particles[3][counter_of_particles + counter_of_particles2][0].back(), particles[3][counter_of_particles + counter_of_particles2][1].back(), particles[3][counter_of_particles + counter_of_particles2][2].back(), wire, wire_vector, wire_sol, wire_vector_sol, t);
+					otvet = mfc(particles[0][counter_of_particles + counter_of_particles2][0].back(), particles[0][counter_of_particles + counter_of_particles2][1].back(), particles[0][counter_of_particles + counter_of_particles2][2].back(), wire, wire_vector, wire_sol, wire_vector_sol, t);
 					//otvet2 = kfc(particles, particles[3][counter_of_particles][0].back(), particles[3][counter_of_particles][1].back(), particles[3][counter_of_particles][2].back(), 3, counter_of_particles);
-					particles[0][counter_of_particles + counter_of_particles2][6].push_back(((particles[0][counter_of_particles + counter_of_particles2][4][0] * otvet[2] - particles[0][counter_of_particles + counter_of_particles2][5][0] * otvet[1]) * 1000000 /* + otvet2[0]*/) * con);
+					particles[0][counter_of_particles + counter_of_particles2][6].push_back((particles[0][counter_of_particles + counter_of_particles2][4][0] * otvet[2] - particles[0][counter_of_particles + counter_of_particles2][5][0] * otvet[1]) * con);
 					particles[0][counter_of_particles + counter_of_particles2][6].push_back(0);
-					particles[0][counter_of_particles + counter_of_particles2][7].push_back(((particles[0][counter_of_particles + counter_of_particles2][5][0] * otvet[0] - particles[0][counter_of_particles + counter_of_particles2][3][0] * otvet[2]) * 1000000 /* + otvet2[1]*/) * con);
+					particles[0][counter_of_particles + counter_of_particles2][7].push_back((particles[0][counter_of_particles + counter_of_particles2][5][0] * otvet[0] - particles[0][counter_of_particles + counter_of_particles2][3][0] * otvet[2]) * con);
 					particles[0][counter_of_particles + counter_of_particles2][7].push_back(0);
-					particles[0][counter_of_particles + counter_of_particles2][8].push_back(((particles[0][counter_of_particles + counter_of_particles2][3][0] * otvet[1] - particles[0][counter_of_particles + counter_of_particles2][4][0] * otvet[0]) * 1000000 /* + otvet2[2]*/) * con);
+					particles[0][counter_of_particles + counter_of_particles2][8].push_back((particles[0][counter_of_particles + counter_of_particles2][3][0] * otvet[1] - particles[0][counter_of_particles + counter_of_particles2][4][0] * otvet[0]) * con);
 					particles[0][counter_of_particles + counter_of_particles2][8].push_back(0);
 					particles[0][counter_of_particles + counter_of_particles2][9].push_back(t);
 					particles[0][counter_of_particles + counter_of_particles2][9].push_back(0);
+					//fout << particles[0][counter_of_particles + counter_of_particles2][0][0] << " " << particles[0][counter_of_particles + counter_of_particles2][1][0] << " " << particles[0][counter_of_particles + counter_of_particles2][2][0] << endl;
 					counter_of_particles2++;
+
+					particles[1].clear();
+					particles[2].clear();
+					particles[5].clear();
+					particles[6].clear();
 				}
 				por = 0;
 			}
+			*/
 		}
 		int type = 0;
-		while (particles.size() > type) {
-			int o = 0;
-			if (particles[type][0][0][0] != 0) {
-				while (particles[type].size() > o) {
+		if (por2 > 0) {
+			while (particles.size() > type) {		// просчёт частиц уже влетевших в плазму
+				int o = 0;
+				while (o < particles[type].size()) {
 					con = con2 * charge[type] / mass[type];
-					if (particles[type][o][5][1] == 0.10101010101) {
+					if (particles[type][o][5][1] == 0.10101010101) {																								// те которые первый раз считаются
 						particles[type][o][0][1] = particles[type][o][0][0] + particles[type][o][3][0] * dt + particles[type][o][6][0] * dt * dt / 2;
 						particles[type][o][1][1] = particles[type][o][1][0] + particles[type][o][4][0] * dt + particles[type][o][7][0] * dt * dt / 2;
 						particles[type][o][2][1] = particles[type][o][2][0] + particles[type][o][5][0] * dt + particles[type][o][8][0] * dt * dt / 2;
@@ -451,10 +487,11 @@ int main() {
 						particles[type][o][5][1] = particles[type][o][5][0] + particles[type][o][8][0] * dt;
 						otvet = mfc(particles[type][o][0][1], particles[type][o][1][1], particles[type][o][2][1], wire, wire_vector, wire_sol, wire_vector_sol, t);
 						otvet2 = kfc(particles, particles[type][o][0][1], particles[type][o][1][1], particles[type][o][2][1], type, o);
-						particles[type][o][6][1] = ((particles[type][o][4][1] * otvet[2] - particles[type][o][5][1] * otvet[1]) * 1000000 + otvet2[0]) * con;
-						particles[type][o][7][1] = ((particles[type][o][5][1] * otvet[0] - particles[type][o][3][1] * otvet[2]) * 1000000 + otvet2[1]) * con;
-						particles[type][o][8][1] = ((particles[type][o][3][1] * otvet[1] - particles[type][o][4][1] * otvet[0]) * 1000000 + otvet2[2]) * con;
+						particles[type][o][6][1] = ((particles[type][o][4][1] * otvet[2] - particles[type][o][5][1] * otvet[1])/* + otvet2[0]*/) * con;
+						particles[type][o][7][1] = ((particles[type][o][5][1] * otvet[0] - particles[type][o][3][1] * otvet[2]) /* + otvet2[1]*/) * con;
+						particles[type][o][8][1] = ((particles[type][o][3][1] * otvet[1] - particles[type][o][4][1] * otvet[0]) /* + otvet2[2]*/) * con;
 						particles[type][o][9][1] = t;
+						fout << particles[type][o][0][1] << " " << particles[type][o][1][1] << " " << particles[type][o][2][1] << endl;
 						o++;
 					}
 					else {
@@ -468,8 +505,7 @@ int main() {
 						particles[type][o][7][0] = particles[type][o][7][1];
 						particles[type][o][8][0] = particles[type][o][8][1];
 						particles[type][o][9][0] = particles[type][o][9][1];
-
-						//здесь будет вызов  nf
+						//здесь будет вызов nf
 						particles[type][o][0][1] = particles[type][o][0][0] + particles[type][o][3][0] * dt + particles[type][o][6][0] * dt * dt / 2;
 						particles[type][o][1][1] = particles[type][o][1][0] + particles[type][o][4][0] * dt + particles[type][o][7][0] * dt * dt / 2;
 						particles[type][o][2][1] = particles[type][o][2][0] + particles[type][o][5][0] * dt + particles[type][o][8][0] * dt * dt / 2;
@@ -478,10 +514,11 @@ int main() {
 						particles[type][o][5][1] = particles[type][o][5][0] + particles[type][o][8][0] * dt;
 						otvet = mfc(particles[type][o][0][1], particles[type][o][1][1], particles[type][o][2][1], wire, wire_vector, wire_sol, wire_vector_sol, t);
 						otvet2 = kfc(particles, particles[type][o][0][1], particles[type][o][1][1], particles[type][o][2][1], type, o);
-						particles[type][o][6][1] = ((particles[type][o][4][1] * otvet[2] - particles[type][o][5][1] * otvet[1]) * 1000000 + otvet2[0]) * con;
-						particles[type][o][7][1] = ((particles[type][o][5][1] * otvet[0] - particles[type][o][3][1] * otvet[2]) * 1000000 + otvet2[1]) * con;
-						particles[type][o][8][1] = ((particles[type][o][3][1] * otvet[1] - particles[type][o][4][1] * otvet[0]) * 1000000 + otvet2[2]) * con;
+						particles[type][o][6][1] = ((particles[type][o][4][1] * otvet[2] - particles[type][o][5][1] * otvet[1]) /* + otvet2[0]*/) * con;
+						particles[type][o][7][1] = ((particles[type][o][5][1] * otvet[0] - particles[type][o][3][1] * otvet[2])/* + otvet2[1]*/) * con;
+						particles[type][o][8][1] = ((particles[type][o][3][1] * otvet[1] - particles[type][o][4][1] * otvet[0]) /* + otvet2[2] */ ) * con;
 						particles[type][o][9][1] = t;
+						fout << particles[type][o][0][1] << " " << particles[type][o][1][1] << " " << particles[type][o][2][1] << endl;
 						o++;
 					}
 				}
